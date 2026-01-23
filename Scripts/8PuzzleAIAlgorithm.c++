@@ -3,11 +3,12 @@
 #include <iostream>
 using namespace std;
 
-string generalSearch(problem, QUEUEING-FUNCTION);
+//string generalSearch(problem, QUEUEING-FUNCTION);
 int main(){
  return 0;
 }
-function general-search(problem, QUEUEING-FUNCTION){
+
+/*function general-search(problem, QUEUEING-FUNCTION){
 	nodes = MAKE-QUEUE(MAKE-NODE(problem.INITIAL-STATE))  
 	loop do 
 	if EMPTY(nodes) then return "failure"  
@@ -15,4 +16,4 @@ function general-search(problem, QUEUEING-FUNCTION){
 	if problem.GOAL-TEST(node.STATE) succeeds then return node 
 	nodes = QUEUEING-FUNCTION(nodes, EXPAND(node, problem.OPERATORS))   
 	end
-}
+}*/
