@@ -1,9 +1,19 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include "../Headers/8PuzzleAIAlgorithm.h++"
+#include <exception>
+#include <cstdlib>
 using namespace std;
 
+void clearScreen()
+{
+#ifdef _WIN32
+	std::system("cls");
+#else
+	// Assume POSIX (Linux/macOS)
+	std::system("clear");
+#endif
+}
 /*
 class QueueingFunction{ // FIX THIS NEXT
 	class nodes{
@@ -24,30 +34,61 @@ string generalSearch(vector<vector<int>> currentState) {// FIX THIS NEXT
 	}
 }
 	*/
-class puzzle{
-	vector<vector<int>> builder(int size); /*user inputs a size of puzzle and outputs a vector of vector of ints 
+class Puzzle{
+	vector<vector<int>> InitialState = {
+			{1, 2, 3},
+			{4, 5, 6},
+			{7, 0, 8}};
+	vector<vector<int>> GoalState = {
+			{1, 2, 3},
+			{4, 5, 6},
+			{7, 8, 0}};
+	vector<vector<int>> builder(int size); /*user inputs a size of Puzzle and outputs a vector of vector of ints 
 	where rows is the x axis and y is the columns. 
 	valid inputs are any integer in this postive expression 2^n -1 besides n=0,1. It builds the 2d vector with values
 	from 0-(n-1), n-1 being the size of the array. values are assigned randomly. 0 will be the empty square.*/
-	string outputCurrentState(); //outputs a string of the current state of vector<vector<node>>
-	
+	void PuzzlePrinter(const vector<vector<int>> &currentPuzzle)
+	{
+		for (int row = 0; row < currentPuzzle.size(); row++)
+		{
+			for (int column = 0; column < currentPuzzle.at(0).size(); column++)
+			{
+				cout << "" << currentPuzzle[row][column] << " ";
+			}
+			cout << endl;
+		}
+	}
 };
 
-class UIBuilder{//This class should take in a string and output it in the terminal in a Certain format
-	void clearTerminal(); //This should clear terminal everytime a new screen is prompted
+void squareSwapper(vector<vector<int>>& currentPuzzle, const int position1, const int position2){
+	/* positions
+	0/1/2
+	3/4/5
+	6/7/8*/
+	if (position1 < 0 || 9 <= position1){
+		throw out_of_range("Position 1 out of range");
+	}
+	if (position2 < 0 || 9 <= position2){
+		throw out_of_range("Position 2 out of range");
+	}
+	int tempValue = -1;
+	tempValue = currentPuzzle[position1/3][position1%3];
+	currentPuzzle[position1 / 3][position1 %3] = currentPuzzle[position2 / 3][position2 %3];
+	currentPuzzle[position2 / 3][position2 %3] = tempValue;
+}
 
-};
-
-int main(){
+int main()
+{
 	/* 
-	Main should ask the user to play or for an AI to solve it or to quit puzzle.
-	for both user and AI, build a random puzzle. For user,
+	Main should ask the user to play or for an AI to solve it or to quit Puzzle.
+	for both user and AI, build a random Puzzle. For user,
 	Ask what move of the 4 potential ones that the blank square can go while displaying the current
-	state of the puzzle. Once selected,
+	state of the Puzzle. Once selected,
 	swap the blank square with the square in the selected direction. Repeat. For AI, it will run
 	the general search algorithm and display how fast it was able to be solved in seconds.
-	For both when they reach the goal state, ask to return to main menu or quit puzzle.*/
+	For both when they reach the goal state, ask to return to main menu or quit Puzzle.*/
 	char userInput;
+	Puzzle puzzleInstance;
 	while (true)
 	{
 		cout << "8's Puzzle!!! Wanna play (p) or want an ai to complete one (a)?: ";
