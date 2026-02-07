@@ -4,4 +4,4 @@ Makefile
 _deps
 CMakeFiles
 *.cmake
-Scripts\a.exe
+*.exe
