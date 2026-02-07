@@ -1,8 +1,10 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include "../Headers/8PuzzleAIAlgorithm.h++"
 using namespace std;
 
+/*
 class QueueingFunction{ // FIX THIS NEXT
 	class nodes{
 
@@ -21,6 +23,7 @@ string generalSearch(vector<vector<int>> currentState) {// FIX THIS NEXT
 		nodes = QUEUEING-FUNCTION(nodes, EXPAND(node, problem.OPERATORS))   
 	}
 }
+	*/
 class puzzle{
 	vector<vector<int>> builder(int size); /*user inputs a size of puzzle and outputs a vector of vector of ints 
 	where rows is the x axis and y is the columns. 
@@ -44,6 +47,42 @@ int main(){
 	swap the blank square with the square in the selected direction. Repeat. For AI, it will run
 	the general search algorithm and display how fast it was able to be solved in seconds.
 	For both when they reach the goal state, ask to return to main menu or quit puzzle.*/
+	char userInput;
+	while (true)
+	{
+		cout << "8's Puzzle!!! Wanna play (p) or want an ai to complete one (a)?: ";
+		cin >> userInput;
+		if (userInput == 'p')
+		{
+			cout << "Playing game.\n";
+			cout << "{1,2,3}\n{4,5,6}\n{7,8,0}\n";
+		}
+		else if (userInput == 'a')
+		{
+			cout << "AI playing game.\n";
+		}
+		else
+		{
+			cout << "Wrong input, try again!\n";
+			continue;
+		}
+		cout << "Want to return to main menu? Yes (y) or Quit (q): ";
+		while (true){
+			cin >> userInput;
+			if (userInput == 'y')
+			{
+				break;
+			}
+			else if (userInput == 'q')
+			{
+				return 0;
+			}
+			else{
+				cout<<"Wrong input, try again!\n";
+				continue;
+			}
+		}
+	}
 	return 0;
 }
 
