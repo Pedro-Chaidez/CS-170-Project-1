@@ -35,47 +35,95 @@ string generalSearch(vector<vector<int>> currentState) {// FIX THIS NEXT
 }
 	*/
 class Puzzle{
+	bool isPlaying = 0;
+	int zeroPosition = -1;
 	vector<vector<int>> InitialState = {
-			{1, 2, 3},
-			{4, 5, 6},
-			{7, 0, 8}};
+		{1, 2, 3},
+		{4, 5, 6},
+		{7, 0, 8}};
 	vector<vector<int>> GoalState = {
-			{1, 2, 3},
-			{4, 5, 6},
-			{7, 8, 0}};
-	vector<vector<int>> builder(int size); /*user inputs a size of Puzzle and outputs a vector of vector of ints 
-	where rows is the x axis and y is the columns. 
-	valid inputs are any integer in this postive expression 2^n -1 besides n=0,1. It builds the 2d vector with values
-	from 0-(n-1), n-1 being the size of the array. values are assigned randomly. 0 will be the empty square.*/
-	void PuzzlePrinter(const vector<vector<int>> &currentPuzzle)
+		{1, 2, 3},
+		{4, 5, 6},
+		{7, 8, 0}};
+	int findZeroLocation()
 	{
-		for (int row = 0; row < currentPuzzle.size(); row++)
+		for (unsigned int row = 0; row < InitialState.size(); row++)
 		{
-			for (int column = 0; column < currentPuzzle.at(0).size(); column++)
+			for (unsigned int column = 0; column < InitialState.at(0).size(); column++)
 			{
-				cout << "" << currentPuzzle[row][column] << " ";
+				if (InitialState[row][column] == 0)
+				{
+					return row * 3 + column;
+				}
 			}
-			cout << endl;
 		}
 	}
+	void winChecker()
+	{
+		if (InitialState == GoalState)
+		{
+			isPlaying = 0;
+		}
+		else
+		{
+			isPlaying = 1;
+		}
+	}
+	void squareSwapper(const int position1, const int position2)
+	{
+		/* positions
+		0/1/2
+		3/4/5
+		6/7/8*/
+		if (position1 < 0 || 9 <= position1)
+		{
+			throw out_of_range("Position 1 out of range");
+		}
+		if (position2 < 0 || 9 <= position2)
+		{
+			throw out_of_range("Position 2 out of range");
+		}
+		int tempValue = -1;
+		tempValue = InitialState[position1 / 3][position1 % 3];
+		InitialState[position1 / 3][position1 % 3] = InitialState[position2 / 3][position2 % 3];
+		InitialState[position2 / 3][position2 % 3] = tempValue;
+		winChecker();
+		zeroPosition = findZeroLocation();
+	}
+	public:
+		Puzzle() : 
+			isPlaying(1), 
+			zeroPosition(findZeroLocation())
+		{}
+		void PuzzlePrinter() const
+		{
+			for (unsigned int row = 0; row < InitialState.size(); row++)
+			{
+				for (unsigned int column = 0; column < InitialState.at(0).size(); column++)
+				{
+					cout << "" << InitialState[row][column] << " ";
+				}
+				cout << endl;
+			}
+		}
+		void moveBlankSquareUp()
+		{
+			
+		}
+		void moveBlankSquareLeft()
+		{
+		}
+		void moveBlankSquareDown()
+		{
+		}
+		void moveBlankSquareRight()
+		{
+			
+		}
+		bool getIsPlaying() const{
+			return isPlaying;
+		}
 };
-
-void squareSwapper(vector<vector<int>>& currentPuzzle, const int position1, const int position2){
-	/* positions
-	0/1/2
-	3/4/5
-	6/7/8*/
-	if (position1 < 0 || 9 <= position1){
-		throw out_of_range("Position 1 out of range");
-	}
-	if (position2 < 0 || 9 <= position2){
-		throw out_of_range("Position 2 out of range");
-	}
-	int tempValue = -1;
-	tempValue = currentPuzzle[position1/3][position1%3];
-	currentPuzzle[position1 / 3][position1 %3] = currentPuzzle[position2 / 3][position2 %3];
-	currentPuzzle[position2 / 3][position2 %3] = tempValue;
-}
 
 int main()
 {
@@ -91,27 +139,57 @@ int main()
 	Puzzle puzzleInstance;
 	while (true)
 	{
-		cout << "8's Puzzle!!! Wanna play (p) or want an ai to complete one (a)?: ";
+		cout << "8's Puzzle!!! Wanna play (p) or want an ai to complete one (a)? or quit (q): ";
 		cin >> userInput;
 		if (userInput == 'p')
 		{
-			cout << "Playing game.\n";
-			cout << "{1,2,3}\n{4,5,6}\n{7,8,0}\n";
+			clearScreen();
+			while(puzzleInstance.getIsPlaying()){
+				puzzleInstance.PuzzlePrinter();
+				cout<<endl<<"Where would to you like to slide the white tile?: Up (u), Down(d), Left (l), Right (r), or Quit (q): ";
+				cin>>userInput;
+				clearScreen();
+				switch (userInput)
+				{
+				case 'u':
+					puzzleInstance.moveBlankSquareUp();
+					break;
+				case 'd':
+					puzzleInstance.moveBlankSquareDown();
+					break;
+				case 'l':
+					puzzleInstance.moveBlankSquareLeft();
+					break;
+				case 'r':
+					puzzleInstance.moveBlankSquareRight();
+					break;
+				case 'q':
+					return 0;
+				default:
+					cout << "Wrong Input, please try again!" << endl;
+				}
+			}
 		}
 		else if (userInput == 'a')
 		{
 			cout << "AI playing game.\n";
 		}
+		else if (userInput == 'q'){
+			return 0;
+		}
 		else
 		{
+			clearScreen();
 			cout << "Wrong input, try again!\n";
 			continue;
-		}
-		cout << "Want to return to main menu? Yes (y) or Quit (q): ";
+		}		
 		while (true){
+			cout << "Game Finished! Want to return to main menu? Yes (y) or Quit (q): ";
 			cin >> userInput;
+			cout<<endl;
 			if (userInput == 'y')
 			{
+				clearScreen();
 				break;
 			}
 			else if (userInput == 'q')
@@ -119,6 +197,7 @@ int main()
 				return 0;
 			}
 			else{
+				clearScreen();
 				cout<<"Wrong input, try again!\n";
 				continue;
 			}
