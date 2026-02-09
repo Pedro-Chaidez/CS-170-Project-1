@@ -108,17 +108,47 @@ class Puzzle{
 		}
 		void moveBlankSquareUp()
 		{
-			
+			if (zeroPosition % 3 == 0)
+			{
+				throw out_of_range("Can't move a blank past the first row");
+			}
+			else
+			{
+				squareSwapper(zeroPosition, zeroPosition-3);
+			}
 		}
 		void moveBlankSquareLeft()
 		{
+			if (zeroPosition / 3 == 0)
+			{
+				throw out_of_range("Can't move a blank past the first row");
+			}
+			else
+			{
+				squareSwapper(zeroPosition, zeroPosition - 1);
+			}
 		}
 		void moveBlankSquareDown()
 		{
+			if (zeroPosition % 3 == 2)
+			{
+				throw out_of_range("Can't move a blank past the first row");
+			}
+			else
+			{
+				squareSwapper(zeroPosition, zeroPosition + 3);
+			}
 		}
 		void moveBlankSquareRight()
 		{
-			
+			if (zeroPosition / 3 == 0)
+			{
+				throw out_of_range("Can't move a blank past the first row");
+			}
+			else
+			{
+				squareSwapper(zeroPosition, zeroPosition - 3);
+			}
 		}
 		bool getIsPlaying() const{
 			return isPlaying;
