@@ -35,7 +35,6 @@ int main()
 			return 0;
 
 		// Shuffle board (25 moves to ensure it's solvable but not too easy)
-		// Pass 0 if you want to test the goal state immediately
 		game.shufflePuzzle(25);
 
 		if (userInput == 'p')
@@ -83,10 +82,26 @@ int main()
 		}
 		else if (userInput == 'a')
 		{
+			// Algorithm Selection Menu
+			int algoChoice;
+			cout << "\nSelect Algorithm:" << endl;
+			cout << "1. Uniform Cost Search" << endl;
+			cout << "2. A* with Misplaced Tile Heuristic" << endl;
+			cout << "3. A* with Manhattan Distance Heuristic" << endl;
+			cout << "Choice (1-3): ";
+			cin >> algoChoice;
+
+			if (algoChoice < 1 || algoChoice > 3)
+			{
+				cout << "Invalid algorithm selection. Defaulting to Manhattan." << endl;
+				algoChoice = 3;
+			}
+
 			clearScreen();
 			cout << "Initial Random State:" << endl;
 			game.printBoard();
-			solveAI(game);
+
+			solveAI(game, algoChoice);
 		}
 		else
 		{

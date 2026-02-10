@@ -3,11 +3,13 @@
 #include <set>
 #include <cmath>
 #include <iostream>
+#include <algorithm> // for std::max
 
 using namespace std;
 
-// Heuristic: Manhattan Distance
-// (Kept internal to this file as it's a helper for the solver)
+// --- Heuristic Functions ---
+
+// 1. Manhattan Distance (Sum of distances of tiles to their goal positions)
 int calculateManhattan(const vector<vector<int>> &state)
 {
 	int distance = 0;
@@ -28,27 +30,75 @@ int calculateManhattan(const vector<vector<int>> &state)
 	return distance;
 }
 
-void solveAI(Puzzle &initialPuzzle)
+// 2. Misplaced Tile Heuristic (Count of tiles not in correct position)
+int calculateMisplaced(const vector<vector<int>> &state)
+{
+	int misplaced = 0;
+	for (int r = 0; r < 3; r++)
+	{
+		for (int c = 0; c < 3; c++)
+		{
+			int value = state[r][c];
+			if (value != 0)
+			{ // Don't count the blank tile (0)
+				// Correct value for this position should be (r*3 + c + 1)
+				// Exception: The last cell (2,2) should be 0, but we skip 0 checks anyway.
+				int targetR = (value - 1) / 3;
+				int targetC = (value - 1) % 3;
+
+				// If the tile is not where it belongs, increment cost
+				if (r != targetR || c != targetC)
+				{
+					misplaced++;
+				}
+			}
+		}
+	}
+	return misplaced;
+}
+
+// Helper to switch between heuristics based on user choice
+int getHeuristic(const vector<vector<int>> &state, int choice)
+{
+	if (choice == UNIFORM_COST)
+	{
+		return 0; // UCS is just A* with h(n) = 0
+	}
+	else if (choice == MISPLACED_TILE)
+	{
+		return calculateMisplaced(state);
+	}
+	else
+	{
+		return calculateManhattan(state);
+	}
+}
+
+// --- General Search Algorithm ---
+void solveAI(Puzzle &initialPuzzle, int algorithmChoice)
 {
 	cout << "AI is thinking..." << endl;
 
-	// Priority queue stores nodes to visit, ordered by lowest cost
+	// Priority queue stores nodes to visit, ordered by lowest f(n) = g(n) + h(n)
 	priority_queue<Node, vector<Node>, greater<Node>> frontier;
 
 	// Set to keep track of visited states to prevent loops
 	set<vector<vector<int>>> visited;
 
+	// Statistics
+	int nodesExpanded = 0;
+	size_t maxQueueSize = 0;
+
 	// Initial Node
 	Node startNode;
 	startNode.state = initialPuzzle.getState();
 	startNode.g = 0;
-	startNode.h = calculateManhattan(startNode.state);
+	startNode.h = getHeuristic(startNode.state, algorithmChoice);
 	startNode.path = "";
 
 	frontier.push(startNode);
 	visited.insert(startNode.state);
-
-	int nodesExpanded = 0;
+	maxQueueSize = max(maxQueueSize, frontier.size());
 
 	while (!frontier.empty())
 	{
@@ -63,10 +113,11 @@ void solveAI(Puzzle &initialPuzzle)
 		{
 			cout << "AI Solved it!" << endl;
 			cout << "Nodes Expanded: " << nodesExpanded << endl;
+			cout << "Max Queue Size: " << maxQueueSize << endl;
 			cout << "Solution Depth: " << current.g << endl;
 			cout << "Path: " << current.path << endl;
 
-			// Show the result
+			// Show the final state
 			cout << "\nFinal State:" << endl;
 			p.printBoard();
 			return;
@@ -95,11 +146,14 @@ void solveAI(Puzzle &initialPuzzle)
 					Node neighbor;
 					neighbor.state = newState;
 					neighbor.g = current.g + 1;
-					neighbor.h = calculateManhattan(newState);
+					neighbor.h = getHeuristic(newState, algorithmChoice);
 					neighbor.path = current.path + moveName + " ";
 
 					visited.insert(newState);
 					frontier.push(neighbor);
+
+					// Update max queue size
+					maxQueueSize = max(maxQueueSize, frontier.size());
 				}
 			}
 		};
@@ -111,4 +165,6 @@ void solveAI(Puzzle &initialPuzzle)
 	}
 
 	cout << "Failure: Could not find solution." << endl;
+	cout << "Nodes Expanded: " << nodesExpanded << endl;
+	cout << "Max Queue Size: " << maxQueueSize << endl;
 }

@@ -1,15 +1,15 @@
 #ifndef PUZZLE_H
 #define PUZZLE_H
-
 #include <vector>
 #include <iostream>
+using namespace std;
 
 class Puzzle
 {
 private:
-	std::vector<std::vector<int>> state;
+	vector<vector<int>> state;
 	// Goal state definition
-	const std::vector<std::vector<int>> goalState = {
+	const vector<vector<int>> goalState = {
 			{1, 2, 3},
 			{4, 5, 6},
 			{7, 8, 0}};
@@ -21,10 +21,10 @@ private:
 public:
 	// Constructors
 	Puzzle();
-	Puzzle(std::vector<std::vector<int>> s);
+	Puzzle(vector<vector<int>> s);
 
 	// Getters
-	std::vector<std::vector<int>> getState() const;
+	vector<vector<int>> getState() const;
 	bool isGoal() const;
 
 	// Display
