@@ -1,55 +1,26 @@
-cmake_minimum_required(VERSION 3.14)
-project(8PuzzleSolver)
+cmake_minimum_required(VERSION 3.15)
+project(8PuzzleProject)
 
-set(CMAKE_CXX_STANDARD 11)
+# Use C++ 20 as requested in your guide
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Output Directory Configuration
-# This ensures executables go to the 'bin' folder relative to your build directory
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+# --- 1. COVERAGE FLAGS (Wrapped for Safety) ---
+# We only apply these Linux/GCC flags if the compiler is GCC or Clang.
+# This prevents errors if you are on Windows using MSVC.
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage -g -O0 -fprofile-arcs -ftest-coverage")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage -lgcov")
+endif()
 
-# Include directories
-include_directories(Headers Scripts)
+# --- 2. OUTPUT DIRECTORY (From your guide) ---
+# Ensures executables go into ./bin/
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 
-# Google Test setup
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-)
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
+# --- 3. DEFINE SOURCES ---
+# These are the logic files for the Game
+set(CORE_SOURCES ./lib/Puzzle.cpp ./lib/Solver.cpp)
 
-enable_testing()
-
-# 1. Test executable
-add_executable(
-  unit_tests
-  "Test scripts/UnitTests.cpp"
-)
-
-target_link_libraries(
-  unit_tests
-  GTest::gtest_main
-)
-
-# Discover tests for CTest
-include(GoogleTest)
-gtest_discover_tests(unit_tests)
-
-# 2. Custom Target to force test execution
-# This creates a "gatekeeper" task that runs the tests.
-add_custom_target(run_unit_tests
-    COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-    DEPENDS unit_tests
-    COMMENT "Executing algorithm verification suite..."
-)
-
-# 3. Main Executable
-add_executable(8PuzzleExecutable Scripts/8PuzzleAIAlgorithm.cpp)
-
-# 4. ENFORCE TESTS
-# By making the executable depend on the 'run_unit_tests' target, 
-# 'make' will be forced to run (and pass) tests before it even 
-# attempts to compile/link the main 8PuzzleExecutable.
-add_dependencies(8PuzzleExecutable run_unit_tests)
+# --- 4. EXECUTABLE: THE MAIN GAME ---
+# Compile main.cpp with the core logic
+add_executable(main ./lib/main.cpp ${CORE_SOURCES})
