@@ -5,71 +5,92 @@
 
 using namespace std;
 
-// Helper function to clear console
-void clearScreen()
-{
-#ifdef _WIN32
-	std::system("cls");
-#else
-	std::system("clear");
-#endif
-}
-
 int main()
 {
-	char userInput;
+	int userInput;
 
 	while (true)
 	{
-		// Setup new game
-		Puzzle game({{0,7,2},{4,6,1},{3,5,8}});
-
-		cout << "8-Puzzle Solver Main Menu" << endl
-				 << "1. Play Yourself (p)" << endl
-				 << "2. Let AI Solve (a)" << endl
-				 << "3. Quit (q)" << endl
+		Puzzle game;
+		MainMenu:
+		cout << "Welcome to 8-Puzzle Solver!" << endl
+					<< "1. To play a random puzzle" << endl
+					<< "2. To create your own puzzle" << endl
+					<< "3. Quit" << endl
+					<< "Choice (from here on out enter number ): ";
+		cin >> userInput;
+		switch (userInput)
+		{
+		case 1:
+			game.shufflePuzzle(31);
+			break;
+		case 2:{
+			unsigned const int PUZZLESIZE = 3;
+			vector<vector<int>> rowList(PUZZLESIZE);
+			vector<int> incomingInts(PUZZLESIZE);
+			cout << "Enter your puzzle, using a zero to represent the empty square. Please only enter valid 8-puzzles."<<endl
+					 << "Enter the puzzle demilimiting the numbers with a space. Type  RETURN only when" << endl
+					 << "finished." <<endl;
+			for(unsigned int i = 1; i<=rowList.size(); i++){
+				cout << "Enter row "<<i<<": ";
+				for (unsigned int j = 0; j < incomingInts.size(); j++)
+				{
+					cin >> userInput;
+					incomingInts.at(j) = userInput;
+				}
+				cout<<endl;
+			}
+			game = rowList;
+			}break;
+		case 3:
+			return 0;
+		default:
+			cout<<"Incorrect Character!"<<endl<<endl;
+			goto MainMenu;
+		}
+		
+		cout << "Who is solving?" << endl
+				 << "1. Play Yourself" << endl
+				 << "2. Let AI Solve" << endl
+				 << "3. Quit" << endl
 				 << "Choice: ";
 		cin >> userInput;
 
-		if (userInput == 'q')
+		if (userInput == 3)
 			return 0;
 
-		// Shuffle board (25 moves to ensure it's solvable but not too easy)
-		game.shufflePuzzle(31);
-
-		if (userInput == 'p')
+		if (userInput == 1)
 		{
-			clearScreen();
 			while (!game.isGoal())
 			{
 				game.printBoard();
-				cout << "Move: Up (u), Down (d), Left (l), Right (r), Quit to Menu (q): ";
+				//I chose these numbers since it corresponded to the numpad
+				cout << "Move: Up (8), Down (2), Left (4), Right (6), Quit to Menu (0): ";
 				cin >> userInput;
 
 				bool moved = false;
-				clearScreen();
-
+				
 				switch (userInput)
 				{
-				case 'u':
+				case 8:
 					moved = game.moveUp();
 					break;
-				case 'd':
+				case 2:
 					moved = game.moveDown();
 					break;
-				case 'l':
+				case 4:
 					moved = game.moveLeft();
 					break;
-				case 'r':
+				case 6:
 					moved = game.moveRight();
 					break;
-				case 'q':
+				case 0:
 					goto end_game;
 				default:
 					cout << "Invalid input." << endl;
 				}
 
-				if (!moved && userInput != 'q')
+				if (!moved && userInput != 0)
 				{
 					cout << "Cannot move that way!" << endl;
 				}
@@ -80,7 +101,7 @@ int main()
 				cout << "\nCONGRATULATIONS! You solved the puzzle!\n";
 			}
 		}
-		else if (userInput == 'a')
+		else if (userInput == 2)
 		{
 			// Algorithm Selection Menu
 			int algoChoice;
@@ -93,11 +114,10 @@ int main()
 
 			if (algoChoice < 1 || algoChoice > 3)
 			{
-				cout << "Invalid algorithm selection. Defaulting to Manhattan." << endl;
-				algoChoice = 3;
+				cout << "Invalid algorithm selection. Returning to Main Menu..." << endl;
+				goto MainMenu;
 			}
-
-			clearScreen();
+			
 			cout << "Initial Random State:" << endl;
 			game.printBoard();
 
@@ -105,17 +125,16 @@ int main()
 		}
 		else
 		{
-			clearScreen();
 			cout << "Invalid selection." << endl;
 			continue;
 		}
 
 	end_game:
-		cout << "\nPress 'y' to return to menu, or 'q' to quit: ";
+		cout << "\nPress 1 to return to menu, or 0 to quit: ";
 		cin >> userInput;
-		if (userInput == 'q')
+		if (userInput == 0)
 			return 0;
-		clearScreen();
+		
 	}
 	return 0;
 }

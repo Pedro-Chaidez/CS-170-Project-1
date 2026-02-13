@@ -40,6 +40,13 @@ Puzzle& Puzzle::operator=(const Puzzle &other){
 	}
 	return *this;
 }
+// Sets a new puzzle with vector
+Puzzle &Puzzle::operator=(const vector<vector<int>> &s)
+{
+	state = s;
+	updateZeroPosition();
+	return *this;
+}
 // Constructs a Puzzle with vector
 Puzzle::Puzzle(vector<vector<int>> s) : state(s)
 {

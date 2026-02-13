@@ -23,6 +23,7 @@ public:
 	Puzzle();
 	Puzzle(const Puzzle &other);
 	Puzzle& operator=(const Puzzle &other);
+	Puzzle& operator=(const vector<vector<int>> &s);
 	~Puzzle() = default;
 	Puzzle(vector<vector<int>> s);
 
