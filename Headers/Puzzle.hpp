@@ -21,6 +21,9 @@ private:
 public:
 	// Constructors
 	Puzzle();
+	Puzzle(const Puzzle &other);
+	Puzzle& operator=(const Puzzle &other);
+	~Puzzle() = default;
 	Puzzle(vector<vector<int>> s);
 
 	// Getters

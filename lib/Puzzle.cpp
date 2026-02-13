@@ -21,12 +21,26 @@ void Puzzle::updateZeroPosition()
 	}
 }
 
+// Rule of Three
 Puzzle::Puzzle()
 {
 	state = goalState;
 	updateZeroPosition();
 }
-
+Puzzle::Puzzle(const Puzzle &other)
+	:state(other.state),
+	zeroRow(other.zeroRow),
+	zeroCol(other.zeroCol)
+{}
+Puzzle& Puzzle::operator=(const Puzzle &other){
+	if (this != &other) {
+		state = other.state;
+		zeroRow = other.zeroRow;
+		zeroCol = other.zeroCol;
+	}
+	return *this;
+}
+// Constructs a Puzzle with vector
 Puzzle::Puzzle(vector<vector<int>> s) : state(s)
 {
 	updateZeroPosition();

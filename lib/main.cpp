@@ -22,7 +22,7 @@ int main()
 	while (true)
 	{
 		// Setup new game
-		Puzzle game;
+		Puzzle game({{0,7,2},{4,6,1},{3,5,8}});
 
 		cout << "8-Puzzle Solver Main Menu" << endl
 				 << "1. Play Yourself (p)" << endl
@@ -35,7 +35,7 @@ int main()
 			return 0;
 
 		// Shuffle board (25 moves to ensure it's solvable but not too easy)
-		game.shufflePuzzle(25);
+		game.shufflePuzzle(31);
 
 		if (userInput == 'p')
 		{

@@ -4,6 +4,7 @@
 #include <cmath>
 #include <iostream>
 #include <algorithm> // for std::max
+#include <chrono>		 // Added for timer
 
 using namespace std;
 
@@ -79,6 +80,9 @@ void solveAI(Puzzle &initialPuzzle, int algorithmChoice)
 {
 	cout << "AI is thinking..." << endl;
 
+	// Start the timer
+	auto startTime = chrono::high_resolution_clock::now();
+
 	// Priority queue stores nodes to visit, ordered by lowest f(n) = g(n) + h(n)
 	priority_queue<Node, vector<Node>, greater<Node>> frontier;
 
@@ -111,7 +115,12 @@ void solveAI(Puzzle &initialPuzzle, int algorithmChoice)
 		Puzzle p(current.state);
 		if (p.isGoal())
 		{
+			// Stop the timer and calculate duration
+			auto endTime = chrono::high_resolution_clock::now();
+			chrono::duration<double> elapsed = endTime - startTime;
+
 			cout << "AI Solved it!" << endl;
+			cout << "Time Taken: " << elapsed.count() << " seconds" << endl;
 			cout << "Nodes Expanded: " << nodesExpanded << endl;
 			cout << "Max Queue Size: " << maxQueueSize << endl;
 			cout << "Solution Depth: " << current.g << endl;
