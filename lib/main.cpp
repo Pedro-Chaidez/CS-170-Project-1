@@ -31,13 +31,14 @@ int main()
 			cout << "Enter your puzzle, using a zero to represent the empty square. Please only enter valid 8-puzzles."<<endl
 					 << "Enter the puzzle demilimiting the numbers with a space. Type  RETURN only when" << endl
 					 << "finished." <<endl;
-			for(unsigned int i = 1; i<=rowList.size(); i++){
-				cout << "Enter row "<<i<<": ";
+			for(unsigned int i = 0; i<rowList.size(); i++){
+				cout << "Enter row "<<i+1<<": ";
 				for (unsigned int j = 0; j < incomingInts.size(); j++)
 				{
 					cin >> userInput;
 					incomingInts.at(j) = userInput;
 				}
+				rowList.at(i) = incomingInts;
 				cout<<endl;
 			}
 			game = rowList;
