@@ -1,5 +1,5 @@
 # CS 170 Project 1
-AI Algorithm to solve any #Puzzle (like 8s puzzles)
+Search Algorithms and 8 Puzzles
 
 # To build it you must have cmake installed and do the following:
 * cmake -G "MinGW Makefiles" .
