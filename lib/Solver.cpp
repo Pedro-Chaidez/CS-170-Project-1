@@ -109,6 +109,20 @@ void solveAI(Puzzle &initialPuzzle, int algorithmChoice)
 		// Pop the best node
 		Node current = frontier.top();
 		frontier.pop();
+		cout << "The best state to expand with a g(n) = " << current.g
+				 << " and h(n) = " << current.h << " is..." << endl;
+
+		for (const auto &row : current.state)
+		{
+			cout << "[";
+			for (size_t i = 0; i < row.size(); ++i)
+			{
+				cout << row[i];
+				if (i < row.size() - 1)
+					cout << ", ";
+			}
+			cout << "]" << endl;
+		}
 		nodesExpanded++;
 
 		// Goal Test
